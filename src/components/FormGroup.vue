@@ -1,58 +1,80 @@
+<!--Render Form Fields-->
 <template>
-    <div>
-      <div v-for="(input, index) in inputFields" :key="index">
-        <label v-if="input.type !== 'radio'" :for="input.for" :id="input.for">{{ input.label }}</label>
-        <input v-if="input.field == 'input' || input.field == 'radio'" :name="input.name" v-model="input.value" :type="input.type"/>
-        <label v-if="input.type== 'radio'" :for="input.for" :id="input.for" :value="input.label">{{ input.label }}</label>
-        <select v-if="input.field == 'select'" v-model="input.value" :type="input.type" >
-          <option placeholder="select" v-for="(option, index) in input.options" :key="index" :value="option">
-              {{ option }}
-          </option>
-        </select>
-      </div>
-      <button v-if="allFieldsValid" @click="submitForm">Submit</button>
+  <div>
+    <div v-for="(input, index) in inputFields" :key="index">
+      <!--Input-->
+      <label v-if="input.type !== 'radio'" :for="input.name">{{ input.label }}</label>
+      <input
+        v-if="input.field === 'input'"
+        :name="input.name"
+        :value="fieldValues[input.name]"
+        @input="setFieldValue({ name: input.name, value: $event.target.value })"
+        :type="input.type"
+      />
+      <!--textarea input-->
+      <textarea
+        v-if="input.field === 'textarea'"
+        :name="input.name"
+        :value="fieldValues[input.name]"
+        @input="setFieldValue({ name: input.name, value: $event.target.value })"
+        :type="input.type"
+      ></textarea>
+      <!--Radio input-->
+      <input
+        v-if="input.field === 'radio'"
+        :name="input.name"
+        :value="fieldValues[input.name]"
+        @input="setFieldValue({ name: input.name, value: $event.target.checked })"
+        :type="input.type"
+      />
+      <!--Radio Lable-->
+      <label v-if="input.type === 'radio'" :for="input.name">{{ input.label }}</label>
+      <!--Select-->
+      <select
+        v-if="input.field === 'select'"
+        :value="fieldValues[input.name]"
+        @input="setFieldValue({ name: input.name, value: $event.target.value })"
+      >
+        <option value="" disabled>Select</option>
+        <option v-for="(option, index) in input.options" :key="index" :value="option">
+          {{ option }}
+        </option>
+      </select>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        inputFields: [
-          { label: 'Full Name', name:'FullName', for:'FullName', field: 'input', type: 'text', value: '', validation: '^.{3,}$'  },
-          { label: 'Telephone Number', name:'Number' , for:'Number', field: 'input', type: 'number', value: '', validation: '^.{3,}$' },
-          { label: 'Interest', name:'Interest', for:'Interest', field: 'select', type: 'email', value: '', validation: '^.{3,}$',
-              options:  ['Online Ad', 'Recommendation', 'Referral', 'Other']
-          },
-          { label: 'Description', name:'Description', for:'Description', field: 'radio', type: 'email', value: '', validation: '^.{3,}$' },
-          { label: 'Online Ad', name:'checkGroup' , for:'OnlineAd', field: 'radio', type: 'radio', value: '', validation: '^.{3,}$'},
-          { label: 'Recommmendation', name:'checkGroup' , for:'Recommmendation', field: 'input', type: 'radio', value: '', validation: '^.{3,}$'},
-          { label: 'Referral', name:'checkGroup' , for:'Referral', field: 'radio', type: 'radio', value: '', validation: '^.{3,}$'},
-          { label: 'Other', name:'checkGroup' , for:'Other', field: 'radio', type: 'radio', value: '', validation: '^.{3,}$'}
-        ]
-      };
-    },
-    computed: {
-      allFieldsValid() {
-        for (const input of this.inputFields) {
-        let check = new RegExp(input.validation);
-          if (input.type == 'input' || input.type == 'select'){
-            if (!check.test(input.value)) {
-              return false;
-            }
-          } else if (input.type == 'radio'){
-              if (check.test(input.value)) {
-                return false;
-              }
-            }
-        }
-      return true;
-      }
-    },
-    methods: {
-        submitForm() {
-        console.log('Form submitted!');
-      }
+  </div>
+</template>
+
+<script>
+import { mapState, mapMutations } from 'vuex'
+
+export default {
+  data() {
+    return {
+      //array to render components
+      inputFields: [
+        { label: 'Full Name', name: 'FullName', field: 'input', type: 'text' },
+        { label: 'Telephone Number', name: 'TelNumber', field: 'input', type: 'tel' },
+        {
+          label: 'Interest',
+          name: 'Interest',
+          field: 'select',
+          type: 'email',
+          options: ['Online Ad', 'Recommendation', 'Referral', 'Other']
+        },
+        { label: 'Description', name: 'Description', field: 'textarea', type: 'text' },
+        { label: 'Online Ad', name: 'checkGroup', field: 'radio', type: 'radio' },
+        { label: 'Recommmendation', name: 'checkGroup', field: 'radio', type: 'radio' },
+        { label: 'Referral', name: 'checkGroup', field: 'radio', type: 'radio' },
+        { label: 'Other', name: 'checkGroup', field: 'radio', type: 'radio' }
+      ]
     }
-  };
-  </script>
+  },
+  //handle field values in state
+  computed: {
+    ...mapState(['fieldValues'])
+  },
+  methods: {
+    ...mapMutations(['setFieldValue'])
+  }
+}
+</script>
