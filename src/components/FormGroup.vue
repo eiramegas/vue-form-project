@@ -1,9 +1,9 @@
 <!--Render Form Fields-->
 <template>
   <div>
-    <div v-for="(input, index) in inputFields" :key="index">
+    <div v-for="(input, index) in getFormFields" :key="index">
       <!--Input-->
-      <label v-if="input.type !== 'radio'" :for="input.name">{{ input.label }}</label>
+      <label v-if="input.type !== 'radio'" :for="input.name">{{ input.label }}<span class="required">*</span></label>
       <input
         v-if="input.field === 'input'"
         :name="input.name"
@@ -19,6 +19,7 @@
         @input="setFieldValue({ name: input.name, value: $event.target.value })"
         :type="input.type"
       ></textarea>
+      <p v-if="input.field === 'textarea'">{{ input.char }} Characters Remaining</p>
       <!--Radio input-->
       <input
         v-if="input.field === 'radio'"
@@ -45,33 +46,17 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 
 export default {
   data() {
     return {
-      //array to render components
-      inputFields: [
-        { label: 'Full Name', name: 'FullName', field: 'input', type: 'text' },
-        { label: 'Telephone Number', name: 'TelNumber', field: 'input', type: 'tel' },
-        {
-          label: 'Interest',
-          name: 'Interest',
-          field: 'select',
-          type: 'email',
-          options: ['Online Ad', 'Recommendation', 'Referral', 'Other']
-        },
-        { label: 'Description', name: 'Description', field: 'textarea', type: 'text' },
-        { label: 'Online Ad', name: 'checkGroup', field: 'radio', type: 'radio' },
-        { label: 'Recommmendation', name: 'checkGroup', field: 'radio', type: 'radio' },
-        { label: 'Referral', name: 'checkGroup', field: 'radio', type: 'radio' },
-        { label: 'Other', name: 'checkGroup', field: 'radio', type: 'radio' }
-      ]
     }
   },
   //handle field values in state
   computed: {
-    ...mapState(['fieldValues'])
+    ...mapState(['fieldValues']),
+    ...mapGetters(['getFormFields'])
   },
   methods: {
     ...mapMutations(['setFieldValue'])
