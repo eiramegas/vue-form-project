@@ -25,18 +25,17 @@
         :class="input.class"
       ></textarea>
       <p v-if="input.field === 'textarea'">{{ input.char }} Characters Remaining</p>
-      <!--checkbox input and label-->
+      <!--checkbox input and labels-->
       <label v-if="index == 4" :for="input.name" :class="input.class+' checkBoxTopLabel'"
         >{{ input.name }}<span class="required">*</span></label
       >
       <input
         v-if="input.field === 'checkbox'"
         @input="setFieldValue({ name: input.name, value: $event.target.checked })"
+        @change="handleCheckboxChange(input.label, $event.target.checked)"
         :name="input.name"
-        :value="fieldValues[input.name]"
         :type="input.type"
       />
-      <!--checkbox Lable-->
       <label v-if="input.type === 'checkbox'" :for="input.name">{{ input.label }}</label>
       <!--Select-->
       <select
@@ -67,7 +66,11 @@ export default {
     ...mapGetters(['getFormFields'])
   },
   methods: {
-    ...mapMutations(['setFieldValue', 'setFormFieldProperty']),
+    ...mapMutations(['setFieldValue', 'setFormFieldProperty', 'setCheckboxChecked']),
+    //set formFields checked prop to true or false based on checkBox
+    handleCheckboxChange(label, checked) {
+      this.setCheckboxChecked({ label, checked });
+    }
   }
 }
 </script>
