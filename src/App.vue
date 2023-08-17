@@ -1,17 +1,16 @@
 <template>
+  <div id="application">
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-    <div class="wrapper">
-    </div>
+    <h1>Welcome to the Form</h1>
   </header>
-  <FormGroup />
-  <ValidationButton>Submit!</ValidationButton>
+    <main>
+      <FormGroup />
+      <ValidationButton>Submit!</ValidationButton>
+    </main>
+  </div>
 </template>
 
 <script setup>
-import FormGroup from './components/FormGroup.vue';
-import ValidationButton from './components/ValidationButton.vue';
-
+import FormGroup from './components/FormGroup.vue'
+import ValidationButton from './components/ValidationButton.vue'
 </script>
-
-
