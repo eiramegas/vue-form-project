@@ -36,19 +36,21 @@ export default createStore({
         ],
         //array to store field values, used for validation
         fieldValues: { Name: '', TelNumber: '', Interest: '', Description: '', Reference: '' },
+
         showHideModal: false
     },
     mutations: {
         setFieldValue(state, field) {
             state.fieldValues[field.name] = field.value
         },
+        //allows for the setting of any property in the formFields object
         setFormFieldProperty(state, change) {
             const { index, propName, propVal } = change
             if (state.formFields[index]) {
                 state.formFields[index][propName] = propVal
             }
         },
-        //set formFields checked prop to true or false based on checkBox
+        //set formFields' "checked" property to true or false based on checkBox status
         setCheckboxChecked(state, { label, checked }) {
             const checkboxField = state.formFields.find(field => field.label === label && field.field === 'checkbox');
             if (checkboxField) {

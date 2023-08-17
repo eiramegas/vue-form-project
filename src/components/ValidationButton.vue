@@ -3,6 +3,7 @@
     <div class="buttonSpace">
         <button v-if="isValid" @click="handleSubmitClick"><slot></slot></button>
     </div>
+    <!--Modal that shows on submit-->
     <SubmitModal v-if="isModalVisible" />
   </template>
   
@@ -17,6 +18,7 @@
         computed: {
             ...mapState(['fieldValues', 'formFields']),
             ...mapGetters(['getFieldValue', 'getCheckedBoxes', 'isModalVisible']),
+            //validation to show and hide button
             isValid() {
                 let validCount = 0;
                 for (const fieldName in this.fieldValues) {
